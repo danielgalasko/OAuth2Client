@@ -1,6 +1,10 @@
 # OAuth2Client
 
-An OAuth2 library for Mac OS X & iOS (Cocoa & Cocoa touch).
+An OAuth2 library for Mac OS X & iOS (Cocoa & Cocoa touch) that has included support to handle LinkedIn's unique OAuth API.
+
+The reason for this fork is that the original implementation correctly adds the OAuth parameters in the HTTP payload whereas
+LinkedIn expect this inside the query (https://developer.linkedin.com/documents/authentication). Thus, this fork checks
+the host of the OAuth request before sending it. If the request host is LinkedIn, then a special request is created.
 
 ## Description
 
@@ -22,9 +26,9 @@ Getting the sources is as easy as doing a:
 [CocoaPods](http://cocoapods.org/) is a dependency manager for Xcode projects. It manages the above
 installation steps automatically.
 
-In order to install the library this way add the following line to your `Podfile`:
+In order to install the library this way add the following line to your `Podfile` (note: I haven't merged to master yet):
 
-```pod 'NXOAuth2Client', ':git => 'https://github.com/danielgalasko/OAuth2Client.git','```
+```pod 'NXOAuth2Client', ':git => 'https://github.com/danielgalasko/OAuth2Client.git', :branch => 'develop'```
 
 and run the following command `pod install`.
 
