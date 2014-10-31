@@ -16,7 +16,7 @@ authentication flow.
 ### Get the sources
 
 Getting the sources is as easy as doing a:  
-`git clone git://github.com/nxtbgthng/OAuth2Client.git`
+`git clone git://github.com/danielgalasko/OAuth2Client.git`
 
 ### Adding the library to your project using CocoaPods
 [CocoaPods](http://cocoapods.org/) is a dependency manager for Xcode projects. It manages the above
@@ -24,7 +24,7 @@ installation steps automatically.
 
 In order to install the library this way add the following line to your `Podfile`:
 
-```pod 'NXOAuth2Client', '~> 1.2.8'```
+```pod 'NXOAuth2Client', ':git => 'https://github.com/danielgalasko/OAuth2Client.git','```
 
 and run the following command `pod install`.
 

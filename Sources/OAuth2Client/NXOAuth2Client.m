@@ -313,12 +313,18 @@ NSString * const NXOAuth2ClientConnectionContextTokenRefresh = @"tokenRefresh";
 {
     NSAssert1(!authConnection, @"authConnection already running with: %@", authConnection);
     
-    NSMutableURLRequest *tokenRequest = [NSMutableURLRequest requestWithURL:tokenURL];
+    NSMutableURLRequest *tokenRequest;
+    if(![[tokenURL host] hasPrefix:@"www.linkedin.com"]) {
+        tokenRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[self URIWithParameters:authGrant redirectURL:redirectURL]]];
+    } else {
+        tokenRequest = [NSMutableURLRequest requestWithURL:tokenURL];
+    }
+    
     [tokenRequest setHTTPMethod:self.tokenRequestHTTPMethod];
     [authConnection cancel];  // just to be sure
-
+    
     self.authenticating = YES;
-
+    
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                        @"authorization_code", @"grant_type",
                                        clientId, @"client_id",
@@ -345,6 +351,24 @@ NSString * const NXOAuth2ClientConnectionContextTokenRefresh = @"tokenRefresh";
                                                      oauthClient:self
                                                         delegate:self];
     authConnection.context = NXOAuth2ClientConnectionContextTokenRequest;
+}
+
+// LinkedIn API, require on access_token requests, all posted parameters to be provided in the submitted URI.
+// Thats why implemented this function, in order to successfully get a token access.
+//@see https://developer.linkedin.com/documents/authentication
+- (NSMutableString *)URIWithParameters:(NSString *)authGrant redirectURL:(NSURL *)redirectURL{
+    
+    NSMutableString *paramsQuery = [[NSMutableString alloc] init];
+    [paramsQuery appendString:[NSString stringWithFormat:@"?grant_type=authorization_code&client_id=%@&client_secret=%@&redirect_uri=%@&code=%@",
+                               [[NSMutableString alloc] initWithString:clientId],
+                               [[NSMutableString alloc] initWithString:clientSecret],
+                               [[NSMutableString alloc] initWithString:[redirectURL absoluteString]],
+                               [[NSMutableString alloc] initWithString:authGrant]]];
+    
+    NSMutableString *tokenURLWithURI = [[NSMutableString alloc] initWithString:[tokenURL absoluteString]];
+    [tokenURLWithURI appendString:paramsQuery];
+    
+    return tokenURLWithURI;
 }
 
 // Client Credential Flow
