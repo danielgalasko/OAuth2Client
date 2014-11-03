@@ -314,7 +314,7 @@ NSString * const NXOAuth2ClientConnectionContextTokenRefresh = @"tokenRefresh";
     NSAssert1(!authConnection, @"authConnection already running with: %@", authConnection);
     
     NSMutableURLRequest *tokenRequest;
-    if(![[tokenURL host] hasPrefix:@"www.linkedin.com"]) {
+    if([[tokenURL host] hasPrefix:@"www.linkedin.com"]) {
         tokenRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[self URIWithParameters:authGrant redirectURL:redirectURL]]];
     } else {
         tokenRequest = [NSMutableURLRequest requestWithURL:tokenURL];
